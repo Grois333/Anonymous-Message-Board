@@ -9,6 +9,20 @@ const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
 
 const app = express();
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.DB)
+  .then(function() {
+    console.log('Connected to MongoDB');
+  })
+  .catch(function(err) {
+    console.error('MongoDB connection error:', err.message);
+  });
+
+app.use(require('helmet')());
+app.use(require('helmet').frameguard({ action: 'sameorigin' }));
+app.use(require('helmet').dnsPrefetchControl({ allow: false }));
+app.use(require('helmet').referrerPolicy({ policy: 'same-origin' }));
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
